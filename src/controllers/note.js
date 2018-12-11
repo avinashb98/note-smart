@@ -1,4 +1,5 @@
 const Note = require('../models/note');
+const setReminder = require('../utils/setReminder');
 
 const getAll = async (req, res) => {
   let notes;
@@ -57,6 +58,10 @@ const create = async (req, res) => {
       data: {}
     });
     return;
+  }
+
+  if (reminder) {
+    setReminder(reminder, content);
   }
 
   res.status(201).json({

@@ -10,11 +10,5 @@ typings/
 # Optional npm cache directory
 .npm
 
-# eslint cache
-.eslintcache
-
-# eslint config
-.eslintrc.json
-
 # dotenv environment variables file
 .env

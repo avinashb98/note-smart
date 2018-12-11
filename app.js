@@ -2,6 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 
+// Note Router
+const note = require('./src/routes/note');
+
 // mongodb config
 require('./config/db');
 
@@ -25,5 +28,8 @@ app.get('/', (req, res) => {
     messge: 'Welcome to NoteSmart API'
   });
 });
+
+// Note Endpoints
+app.use('/note', note);
 
 module.exports = app;

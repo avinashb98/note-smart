@@ -20,7 +20,9 @@ const getAll = async (req, res) => {
     filteredNotes.push({
       id: note._id,
       content: note.content,
-      lastUpdateAt: note.lastUpdateAt
+      lastUpdateAt: note.lastUpdateAt,
+      file: note.fileLocation ? note.fileLocation : null,
+      reminder: note.reminder.time ? note.reminder.time : null
     });
   });
 
@@ -34,8 +36,17 @@ const getAll = async (req, res) => {
 };
 
 const create = async (req, res) => {
-  const { content } = req.body;
+  const { content, reminder } = req.body;
   const note = new Note({ content });
+
+  if (reminder) {
+    note.reminder.time = reminder;
+  }
+
+  if (req.file) {
+    note.fileLocation = req.file.path;
+  }
+
   try {
     await note.save();
   } catch (error) {

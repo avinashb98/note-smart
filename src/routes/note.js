@@ -5,6 +5,7 @@ const router = express.Router();
 
 router
   .post('/', note.create)
+  .put('/', note.update)
   .delete('/', note.remove);
 
 module.exports = router;

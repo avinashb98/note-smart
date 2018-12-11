@@ -19,7 +19,7 @@ const create = async (req, res) => {
     success: true,
     message: 'Note successfully created',
     data: {
-      muse: {
+      note: {
         id: note._id,
         createdAt: note.createdAt,
         content: note.content
@@ -28,16 +28,38 @@ const create = async (req, res) => {
   });
 };
 
+const update = async (req, res) => {
+  const { id, content } = req.body;
+  const updatedNote = {
+    content
+  };
+  try {
+    await Note.findByIdAndUpdate(id, updatedNote, { new: true });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error in Updating Note',
+      data: {}
+    });
+    return;
+  }
+
+  res.status(200).json({
+    success: true,
+    message: 'Note Successfully Updated',
+    data: {}
+  });
+};
 
 const remove = async (req, res) => {
   const { id } = req.body;
   try {
-    await Note.findOneAndDelete({ _id: id });
+    await Note.findByIdAndDelete(id);
   } catch (error) {
     console.log(error);
     res.status(500).json({
       success: false,
-      message: 'Error in removing Note',
+      message: 'Error in Removing Note',
       data: {}
     });
     return;
@@ -52,5 +74,6 @@ const remove = async (req, res) => {
 
 module.exports = {
   create,
+  update,
   remove
 };

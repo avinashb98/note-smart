@@ -61,7 +61,7 @@ const create = async (req, res) => {
   }
 
   if (reminder) {
-    setReminder(reminder, content);
+    setReminder(note._id, reminder, content);
   }
 
   res.status(201).json({

@@ -14,7 +14,8 @@ const NoteSchema = new Schema({
       type: Date
     },
     received: {
-      type: Boolean
+      type: Boolean,
+      default: false
     }
   },
   createdAt: { type: Date, default: new Date() },

@@ -7,6 +7,7 @@ const router = express.Router();
 router
   .get('/all', note.getAll)
   .post('/', upload.single('attachment'), note.create)
+  .post('/search', note.search)
   .put('/', note.update)
   .delete('/', note.remove);
 

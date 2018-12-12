@@ -1,6 +1,20 @@
 const Note = require('../models/note');
 const setReminder = require('../utils/setReminder');
 
+const filterNotes = (notes) => {
+  const filteredNotes = [];
+  notes.forEach((note) => {
+    filteredNotes.push({
+      id: note._id,
+      content: note.content,
+      lastUpdateAt: note.lastUpdateAt,
+      file: note.fileLocation ? note.fileLocation : null,
+      reminder: note.reminder.time ? note.reminder.time : null
+    });
+  });
+  return filteredNotes;
+};
+
 const getAll = async (req, res) => {
   let notes;
   try {
@@ -15,17 +29,7 @@ const getAll = async (req, res) => {
     return;
   }
 
-  const filteredNotes = [];
-
-  notes.forEach((note) => {
-    filteredNotes.push({
-      id: note._id,
-      content: note.content,
-      lastUpdateAt: note.lastUpdateAt,
-      file: note.fileLocation ? note.fileLocation : null,
-      reminder: note.reminder.time ? note.reminder.time : null
-    });
-  });
+  const filteredNotes = filterNotes(notes);
 
   res.status(200).json({
     success: true,
@@ -121,9 +125,51 @@ const remove = async (req, res) => {
   });
 };
 
+const search = async (req, res) => {
+  const { searchString } = req.body;
+  const pattern = new RegExp(searchString);
+  let notes;
+  try {
+    notes = await Note.find({
+      $or: [
+        { content: { $regex: pattern, $options: 'i' } },
+        { fileLocation: { $regex: pattern, $options: 'i' } }
+      ]
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: 'Error in Searching Notes',
+      data: {}
+    });
+    return;
+  }
+
+  if (notes === []) {
+    res.status(404).json({
+      success: false,
+      message: `No notes found for ${searchString}`,
+      data: {}
+    });
+    return;
+  }
+
+  const filteredNotes = filterNotes(notes);
+
+  res.status(200).json({
+    success: true,
+    message: 'List of found Notes',
+    data: {
+      notes: filteredNotes
+    }
+  });
+};
+
 module.exports = {
   getAll,
   create,
   update,
-  remove
+  remove,
+  search
 };

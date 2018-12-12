@@ -51,7 +51,6 @@ const create = async (req, res) => {
   }
 
   if (req.file) {
-    console.log(req.file);
     note.fileLocation = req.file.path;
   }
 
@@ -78,7 +77,8 @@ const create = async (req, res) => {
       note: {
         id: note._id,
         createdAt: note.createdAt,
-        content: note.content
+        content: note.content,
+        file: note.fileLocation
       }
     },
   });

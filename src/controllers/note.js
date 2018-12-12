@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const Note = require('../models/note');
 const setReminder = require('../utils/setReminder');
 
@@ -49,6 +51,7 @@ const create = async (req, res) => {
   }
 
   if (req.file) {
+    console.log(req.file);
     note.fileLocation = req.file.path;
   }
 
@@ -166,10 +169,24 @@ const search = async (req, res) => {
   });
 };
 
+const sendFile = (req, res) => {
+  const { fileLocation } = req.body;
+  if (!fs.existsSync(fileLocation)) {
+    res.status(404).json({
+      success: false,
+      message: 'File not found',
+      data: {}
+    });
+    return;
+  }
+  res.sendFile(path.join(__dirname, '../../', fileLocation));
+};
+
 module.exports = {
   getAll,
   create,
   update,
   remove,
-  search
+  search,
+  sendFile
 };

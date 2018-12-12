@@ -11,7 +11,7 @@ require('./config/db');
 // Initializing express app
 const app = express();
 
-//Body Parser Configuration
+// Body Parser Configuration
 app.use(bodyParser.json({ // to support JSON-encoded bodies
   limit: '1mb'
 }));
